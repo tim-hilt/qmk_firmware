@@ -21,10 +21,10 @@ enum layers {
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
-     KC_TAB,          KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                                                             KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_MINS,
-     LGUI_T(KC_ESC),  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                                                             KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
-     KC_LSFT,         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_MUTE,                                KC_MPLY,         KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_END,
-                                                 KC_LCTL, KC_LALT, KC_SPC, LY_SYM,      LT(_SYM, KC_ENT),  LSFT_T(KC_BSPC), KC_LALT, G(S(4))
+     KC_TAB,          KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                                                             KC_J,    KC_L,      KC_U,    KC_Y,    KC_SCLN, KC_MINS,
+     LGUI_T(KC_ESC),  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                                                             KC_M,    KC_N,      KC_E,    KC_I,    KC_O,    KC_QUOT,
+     KC_LSFT,         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_MUTE,                                KC_MPLY,         KC_K,    KC_H,      KC_COMM, KC_DOT,  KC_SLSH, KC_END,
+                                                 KC_LCTL, KC_LALT, KC_SPC, LY_SYM,      LT(_SYM, KC_ENT),  LSFT_T(KC_BSPC), KC_LALT, G(S(KC_4))
     ),
     [_SYM] = LAYOUT(
      KC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, KC_CIRC,                                         KC_NO,   KC_7,   KC_8, KC_9, KC_COLN, KC_TRNS,
