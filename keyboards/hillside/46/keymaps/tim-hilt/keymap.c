@@ -4,6 +4,7 @@ enum layers {
     _BASE = 0,
     _SYM,
     _INT,
+    _TEMPLATE,
 };
 
 enum custom_keycodes {
@@ -12,9 +13,6 @@ enum custom_keycodes {
     MC_TILD,
     MC_CIRC,
 };
-
-// TODO: Leader key?
-// TODO: record / replay macros?
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
