@@ -1,5 +1,8 @@
 #pragma once
 
+#define DEBOUNCE 10
+
+#define QUICK_TAP_TERM 0
 #define HOLD_ON_OTHER_KEY_PRESS
 
 // Has to be defined so that left side is detected correctly
