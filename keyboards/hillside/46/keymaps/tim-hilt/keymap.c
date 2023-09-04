@@ -1,10 +1,9 @@
 #include QMK_KEYBOARD_H
+#include "os_detection.h"
 
 enum layers {
-    _WIN = 0,
-    _MAC,
-    _WINSYM,
-    _MACSYM,
+    _DEFAULT = 0,
+    _SYM,
     _INT,
     _TEMPLATE,
 };
@@ -14,35 +13,25 @@ enum custom_keycodes {
     MC_GRV,
     MC_TILD,
     MC_CIRC,
+    MC_CAPS,
+    MC_SCRN,
+    MC_THMB,
+    MC_INT,
 };
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_WIN] = LAYOUT(
-     KC_TAB,          KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                                                                 KC_J,     KC_L,      KC_U,    KC_Y,    KC_SCLN, KC_MINS,
-     LCTL_T(KC_ESC),  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                                                                 KC_M,     KC_N,      KC_E,    KC_I,    KC_O,    MC_QUOT,
-     KC_LSFT,         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    XXXXXXX,                                      XXXXXXX,       KC_K,     KC_H,      KC_COMM, KC_DOT,  KC_SLSH, KC_END,
-                                                 XXXXXXX, KC_LALT, KC_SPC, KC_LGUI,        LT(_WINSYM, KC_ENT),  LSFT_T(KC_BSPC),  MO(_INT), XXXXXXX
+    [_DEFAULT] = LAYOUT(
+     KC_TAB,   KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                                                                                    KC_J,     KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_MINS,
+     MC_CAPS,  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                                                                                    KC_M,     KC_N,    KC_E,    KC_I,    KC_O,    MC_QUOT,
+     KC_LSFT,  KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    XXXXXXX,                                                              XXXXXXX,  KC_K,     KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_END,
+                                                   XXXXXXX, KC_LALT, KC_SPC, MC_THMB,        LT(_SYM, KC_ENT),  LSFT_T(KC_BSPC),  MC_INT, XXXXXXX
     ),
-    // More info about persisting the default layer (as opposed to DF) can be found at
-    // https://docs.qmk.fm/#/feature_layers?id=switching-and-toggling-layers
-    [_WINSYM] = LAYOUT(
-     MC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, MC_CIRC,                                             G(S(KC_S)),   KC_7,   KC_8, KC_9, KC_COLN, KC_MINS,
-     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, MC_TILD,                                             DF(_MAC),     KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
-     KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,   XXXXXXX,                           XXXXXXX, KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
-                                         XXXXXXX, KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO,        XXXXXXX
-    ),
-    [_MAC] = LAYOUT(
-     KC_TAB,          KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                                                                    KC_J,     KC_L,      KC_U,    KC_Y,    KC_SCLN, KC_MINS,
-     LGUI_T(KC_ESC),  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                                                                    KC_M,     KC_N,      KC_E,    KC_I,    KC_O,    KC_QUOT,
-     KC_LSFT,         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    XXXXXXX,                                      XXXXXXX,          KC_K,     KC_H,      KC_COMM, KC_DOT,  KC_SLSH, KC_END,
-                                                 XXXXXXX, KC_LALT, KC_SPC, KC_LCTL,        LT(_MACSYM, KC_ENT),  LSFT_T(KC_BSPC),  KC_LALT, XXXXXXX
-    ),
-    [_MACSYM] = LAYOUT(
-     KC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, KC_CIRC,                                             G(S(KC_4)),   KC_7,   KC_8, KC_9, KC_COLN, KC_MINS,
-     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, KC_TILD,                                             DF(_WIN),     KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
-     KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,   XXXXXXX,                           XXXXXXX, KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
-                                         XXXXXXX, KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO,        XXXXXXX
+    [_SYM] = LAYOUT(
+     MC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, MC_CIRC,                                             MC_SCRN,  KC_7,   KC_8, KC_9, KC_COLN, KC_MINS,
+     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, MC_TILD,                                             KC_NO,    KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
+     KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,   XXXXXXX,                           XXXXXXX, KC_0,     KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
+                                         XXXXXXX, KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO,    XXXXXXX
     ),
     [_INT] = LAYOUT(
      KC_NO, KC_NO,      KC_NO, KC_NO,      KC_NO, KC_NO,                                            KC_NO,   KC_NO,   RALT(KC_Y), KC_NO, KC_NO,      KC_NO,
@@ -58,29 +47,75 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+void process_record_user_mac(uint16_t keycode) {
     switch (keycode) {
-        case MC_QUOT:
-            if (record->event.pressed) {
-                SEND_STRING(SS_TAP(X_QUOT) SS_TAP(X_SPC));
-            }
-            return false;
+        case MC_CAPS:
+            register_code16(LGUI_T(KC_ESC));
+            break;
         case MC_GRV:
-            if (record->event.pressed) {
-                SEND_STRING(SS_TAP(X_GRV) SS_TAP(X_SPC));
-            }
-            return false;
+            register_code16(KC_GRV);
+            break;
+        case MC_QUOT:
+            register_code16(KC_QUOT);
+            break;
         case MC_CIRC:
-            if (record->event.pressed) {
-                SEND_STRING("^" SS_TAP(X_SPC));
-            }
-            return false;
+            register_code16(KC_CIRC);
+            break;
+        case MC_SCRN:
+            register_code16(G(S(KC_4)));
+            break;
         case MC_TILD:
-            if (record->event.pressed) {
-                SEND_STRING("~" SS_TAP(X_SPC));
-            }
-            return false;
+            register_code16(KC_TILD);
+            break;
+        case MC_THMB:
+            register_code16(KC_LCTL);
+            break;
+        case MC_INT:
+            register_code16(KC_RALT);
+            break;
     }
+}
 
+void process_record_user_win(uint16_t keycode) {
+    switch (keycode) {
+        case MC_CAPS:
+            register_code16(LCTL_T(KC_ESC));
+            break;
+        case MC_GRV:
+            SEND_STRING(SS_TAP(X_GRV) SS_TAP(X_SPC));
+            break;
+        case MC_QUOT:
+            SEND_STRING(SS_TAP(X_QUOT) SS_TAP(X_SPC));
+            break;
+        case MC_CIRC:
+            SEND_STRING("^" SS_TAP(X_SPC));
+            break;
+        case MC_SCRN:
+            register_code16(G(S(KC_S)));
+            break;
+        case MC_TILD:
+            SEND_STRING("~" SS_TAP(X_SPC));
+            break;
+        case MC_THMB:
+            register_code16(KC_LGUI);
+            break;
+        case MC_INT:
+            register_code16(MO(_INT));
+            break;
+    }
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    const os_variant_t detected_host = detected_host_os();
+    // TODO: this if-branch might have to be pulled into the process_record_user-funcs
+    //   if we want to listen to different events
+    if (record->event.pressed) {
+        if (detected_host == OS_MACOS) {
+            process_record_user_mac(keycode);
+            return false;
+        }
+        process_record_user_win(keycode);
+        return false;
+    }
     return true;
 }

@@ -1,9 +1,9 @@
 #pragma once
 
-#define DEBOUNCE 10
-
 #define QUICK_TAP_TERM 0
 #define HOLD_ON_OTHER_KEY_PRESS
+
+#define ENABLE_COMPILE_KEYCODE
 
 // Has to be defined so that left side is detected correctly
 #define SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
