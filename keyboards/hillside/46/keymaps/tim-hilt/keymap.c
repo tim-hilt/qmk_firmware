@@ -47,62 +47,64 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-void process_record_user_mac(uint16_t keycode) {
+bool process_record_user_mac(uint16_t keycode) {
     switch (keycode) {
         case MC_CAPS:
             register_code16(LGUI_T(KC_ESC));
-            break;
+            return false;
         case MC_GRV:
             register_code16(KC_GRV);
-            break;
+            return false;
         case MC_QUOT:
             register_code16(KC_QUOT);
-            break;
+            return false;
         case MC_CIRC:
             register_code16(KC_CIRC);
-            break;
+            return false;
         case MC_SCRN:
             register_code16(G(S(KC_4)));
-            break;
+            return false;
         case MC_TILD:
             register_code16(KC_TILD);
-            break;
+            return false;
         case MC_THMB:
             register_code16(KC_LCTL);
-            break;
+            return false;
         case MC_INT:
             register_code16(KC_RALT);
-            break;
+            return false;
     }
+    return true;
 }
 
-void process_record_user_win(uint16_t keycode) {
+bool process_record_user_win(uint16_t keycode) {
     switch (keycode) {
         case MC_CAPS:
             register_code16(LCTL_T(KC_ESC));
-            break;
+            return false;
         case MC_GRV:
             SEND_STRING(SS_TAP(X_GRV) SS_TAP(X_SPC));
-            break;
+            return false;
         case MC_QUOT:
             SEND_STRING(SS_TAP(X_QUOT) SS_TAP(X_SPC));
-            break;
+            return false;
         case MC_CIRC:
             SEND_STRING("^" SS_TAP(X_SPC));
-            break;
+            return false;
         case MC_SCRN:
             register_code16(G(S(KC_S)));
-            break;
+            return false;
         case MC_TILD:
             SEND_STRING("~" SS_TAP(X_SPC));
-            break;
+            return false;
         case MC_THMB:
             register_code16(KC_LGUI);
-            break;
+            return false;
         case MC_INT:
             register_code16(MO(_INT));
-            break;
+            return false;
     }
+    return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -111,11 +113,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     //   if we want to listen to different events
     if (record->event.pressed) {
         if (detected_host == OS_MACOS) {
-            process_record_user_mac(keycode);
-            return false;
+            return process_record_user_mac(keycode);
         }
-        process_record_user_win(keycode);
-        return false;
+        return process_record_user_win(keycode);
     }
     return true;
 }
