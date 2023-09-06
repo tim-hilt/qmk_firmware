@@ -6,7 +6,7 @@
 #define HOLD_ON_OTHER_KEY_PRESS
 
 // Has to be defined so that left side is detected correctly
-#define SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
+// #define SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
 
 #define RP2040_FLASH_GD25Q64CS
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET              // Activates the double-tap behavior
