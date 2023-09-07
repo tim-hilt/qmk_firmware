@@ -85,8 +85,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-layer_state_t layer_state_set_user(layer_state_t state) {
+void keyboard_pre_init_user() {
     setPinOutput(D5);
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
     case _MAC:
     case _MACSYM:
