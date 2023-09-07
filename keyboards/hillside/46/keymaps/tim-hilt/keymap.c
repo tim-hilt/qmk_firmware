@@ -84,3 +84,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     return true;
 }
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    setPinOutput(D5);
+    switch (get_highest_layer(state)) {
+    case _MAC:
+    case _MACSYM:
+        writePinHigh(D5);
+        break;
+    default:
+        writePinLow(D5);
+        break;
+    }
+  return state;
+}

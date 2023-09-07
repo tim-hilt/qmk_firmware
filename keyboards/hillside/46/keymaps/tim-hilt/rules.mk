@@ -1,2 +1,2 @@
-CONVERT_TO = promicro_rp2040
+CONVERT_TO = rp2040_ce
 DEBOUNCE_TYPE = asym_eager_defer_pk
