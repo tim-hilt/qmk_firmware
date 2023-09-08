@@ -61,14 +61,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint32_t set_default_layer(uint32_t trigger_time, void *cb_arg) {
     os_variant_t host = detected_host_os();
+
+    if (!host) {
+        return 500;
+    }
     
-    if (host && host == OS_MACOS) {
+    if (host == OS_MACOS) {
         default_layer_set(_MAC);
     }
-    return host ? 0 : 500;
+
+    return 0;
 }
 
-void keyboard_post_init_user() {
+void keyboard_post_init_user(void) {
     defer_exec(100, set_default_layer, NULL);
 }
 
@@ -99,7 +104,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-void keyboard_pre_init_user() {
+void keyboard_pre_init_user(void) {
     setPinOutput(D5);
 }
 
