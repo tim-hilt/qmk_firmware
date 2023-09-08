@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "os_detection.h"
 
 enum layers {
     _WIN = 0,
@@ -58,6 +59,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
+uint32_t set_default_layer(uint32_t trigger_time, void *cb_arg) {
+    os_variant_t host = detected_host_os();
+    
+    if (host && host == OS_MACOS) {
+        default_layer_set(_MAC);
+    }
+    return host ? 0 : 500;
+}
+
+void keyboard_post_init_user() {
+    defer_exec(100, set_default_layer, NULL);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MC_QUOT:
@@ -90,13 +104,18 @@ void keyboard_pre_init_user() {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
+    pin_t val = readPin(D5);
+    switch (get_highest_layer(state | default_layer_state)) {
     case _MAC:
     case _MACSYM:
-        writePinHigh(D5);
+        if (val <= 1) {
+            writePinHigh(D5);
+        }
         break;
     default:
-        writePinLow(D5);
+        if (val > 0) {
+            writePinLow(D5);
+        }
         break;
     }
   return state;
