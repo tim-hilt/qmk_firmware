@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "os_detection.h"
+#include "print.h"
 
 enum layers {
     _WIN = 0,
@@ -62,11 +63,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 uint32_t set_default_layer(uint32_t trigger_time, void *cb_arg) {
     os_variant_t host = detected_host_os();
 
+    uprintf("detected host: %d\n", host);
+
     if (!host) {
         return 500;
     }
     
     if (host == OS_MACOS) {
+        print("Setting default layer to Mac...\n");
         default_layer_set(_MAC);
     }
 
