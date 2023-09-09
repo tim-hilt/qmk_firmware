@@ -65,12 +65,6 @@ bool my_led_on(void) {
     return readPin(LED_PIN) > 0;
 }
 
-void my_deactivate_led(void) {
-    if (my_led_on()) {
-        writePinLow(LED_PIN);
-    }
-}
-
 void my_activate_led(void) {
     if (!my_led_on()) {
         writePinHigh(LED_PIN);
@@ -123,6 +117,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     return true;
+}
+
+void my_deactivate_led(void) {
+    if (my_led_on()) {
+        writePinLow(LED_PIN);
+    }
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
