@@ -1,6 +1,5 @@
 #include QMK_KEYBOARD_H
 #include "os_detection.h"
-#include "print.h"
 
 enum layers {
     _WIN = 0,
@@ -26,11 +25,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_LSFT,         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    XXXXXXX,                                      XXXXXXX,       KC_K,     KC_H,      KC_COMM, KC_DOT,  KC_SLSH, KC_END,
                                                  XXXXXXX, KC_LALT, KC_SPC, KC_LGUI,        LT(_WINSYM, KC_ENT),  LSFT_T(KC_BSPC),  MO(_INT), XXXXXXX
     ),
-    // More info about persisting the default layer (as opposed to DF) can be found at
-    // https://docs.qmk.fm/#/feature_layers?id=switching-and-toggling-layers
     [_WINSYM] = LAYOUT(
      MC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, MC_CIRC,                                             G(S(KC_S)),   KC_7,   KC_8, KC_9, KC_COLN, KC_MINS,
-     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, MC_TILD,                                             DF(_MAC),     KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
+     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, MC_TILD,                                             KC_NO,        KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
      KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,   XXXXXXX,                           XXXXXXX, KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
                                          XXXXXXX, KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO,        XXXXXXX
     ),
@@ -42,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_MACSYM] = LAYOUT(
      KC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, KC_CIRC,                                             G(S(KC_4)),   KC_7,   KC_8, KC_9, KC_COLN, KC_MINS,
-     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, KC_TILD,                                             DF(_WIN),     KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
+     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, KC_TILD,                                             KC_NO,        KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
      KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,   XXXXXXX,                           XXXXXXX, KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
                                          XXXXXXX, KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO,        XXXXXXX
     ),
@@ -60,25 +57,45 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-uint32_t set_default_layer(uint32_t trigger_time, void *cb_arg) {
+void keyboard_pre_init_user(void) {
+    setPinOutput(LED_PIN);
+}
+
+bool my_led_on(void) {
+    return readPin(LED_PIN) > 0;
+}
+
+void my_deactivate_led(void) {
+    if (my_led_on()) {
+        writePinLow(LED_PIN);
+    }
+}
+
+void my_activate_led(void) {
+    if (!my_led_on()) {
+        writePinHigh(LED_PIN);
+    }
+}
+
+bool my_is_apple(os_variant_t host) {
+    return host == OS_MACOS || host == OS_IOS;
+}
+
+uint32_t my_set_default_layer(uint32_t trigger_time, void *cb_arg) {
     os_variant_t host = detected_host_os();
+    uint16_t retry_ms = 500;
 
-    uprintf("detected host: %d\n", host);
-
-    if (!host) {
-        return 500;
-    }
-    
-    if (host == OS_MACOS) {
-        print("Setting default layer to Mac...\n");
-        default_layer_set(_MAC);
+    if (my_is_apple(host)) {
+        default_layer_set(1 << _MAC);
+        my_activate_led();
+        retry_ms = 0;
     }
 
-    return 0;
+    return retry_ms;
 }
 
 void keyboard_post_init_user(void) {
-    defer_exec(100, set_default_layer, NULL);
+    defer_exec(100, my_set_default_layer, NULL);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -108,23 +125,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-void keyboard_pre_init_user(void) {
-    setPinOutput(D5);
-}
-
 layer_state_t layer_state_set_user(layer_state_t state) {
-    pin_t val = readPin(D5);
     switch (get_highest_layer(state | default_layer_state)) {
     case _MAC:
     case _MACSYM:
-        if (val <= 1) {
-            writePinHigh(D5);
-        }
+        my_activate_led();
         break;
     default:
-        if (val > 0) {
-            writePinLow(D5);
-        }
+        my_deactivate_led();
         break;
     }
   return state;
