@@ -26,10 +26,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                  XXXXXXX, KC_LALT, KC_SPC, KC_LGUI,        LT(_WINSYM, KC_ENT),  LSFT_T(KC_BSPC),  MO(_INT), XXXXXXX
     ),
     [_WINSYM] = LAYOUT(
-     MC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, MC_CIRC,                                             G(S(KC_S)),   KC_7,   KC_8, KC_9, KC_COLN, KC_DEL,
-     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, MC_TILD,                                             KC_NO,     KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
-     KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,   XXXXXXX,                           XXXXXXX, KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
-                                         XXXXXXX, KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO,        XXXXXXX
+     MC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, MC_CIRC,                                                G(S(KC_S)),   KC_7,   KC_8, KC_9, KC_COLN, KC_DEL,
+     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, MC_TILD,                                                G(KC_UP),     KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
+     KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,   XXXXXXX,                           XXXXXXX,    KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
+                                         XXXXXXX, KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    G(KC_LEFT), G(KC_RGHT),   XXXXXXX
     ),
     [_MAC] = LAYOUT(
      KC_TAB,          KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                                                                    KC_J,     KC_L,      KC_U,    KC_Y,    KC_SCLN, KC_MINS,
