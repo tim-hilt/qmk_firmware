@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "os_detection.h"
 #include "usb_device_state.h"
+#include "wait.h"
 
 enum layers {
     _WIN = 0,
@@ -78,17 +79,6 @@ void my_deactivate_led(void) {
     }
 }
 
-void notify_usb_device_state_change_user(enum usb_device_state usb_device_state) {
-    static enum usb_device_state current_usb_device_state = USB_DEVICE_STATE_INIT;
-
-    if (usb_device_state == USB_DEVICE_STATE_INIT &&
-        current_usb_device_state == USB_DEVICE_STATE_CONFIGURED) {
-        soft_reset_keyboard();
-    } else {
-        current_usb_device_state = usb_device_state;
-    }
-}
-
 uint32_t my_set_default_layer(uint32_t trigger_time, void *cb_arg) {
     uint32_t ret = 500;
 
@@ -108,6 +98,7 @@ uint32_t my_set_default_layer(uint32_t trigger_time, void *cb_arg) {
         default:
             break;
     }
+
     return ret;
 }
 
