@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "os_detection.h"
+#include "usb_device_state.h"
 
 enum layers {
     _WIN = 0,
@@ -71,21 +72,43 @@ void my_activate_led(void) {
     }
 }
 
-bool my_is_apple(os_variant_t host) {
-    return host == OS_MACOS || host == OS_IOS;
+void my_deactivate_led(void) {
+    if (my_led_on()) {
+        writePinLow(LED_PIN);
+    }
+}
+
+void notify_usb_device_state_change_user(enum usb_device_state usb_device_state) {
+    static enum usb_device_state current_usb_device_state = USB_DEVICE_STATE_INIT;
+
+    if (usb_device_state == USB_DEVICE_STATE_INIT &&
+        current_usb_device_state == USB_DEVICE_STATE_CONFIGURED) {
+        soft_reset_keyboard();
+    } else {
+        current_usb_device_state = usb_device_state;
+    }
 }
 
 uint32_t my_set_default_layer(uint32_t trigger_time, void *cb_arg) {
-    os_variant_t host = detected_host_os();
-    uint16_t retry_ms = 500;
+    uint32_t ret = 500;
 
-    if (my_is_apple(host)) {
-        default_layer_set(1 << _MAC);
-        my_activate_led();
-        retry_ms = 0;
+    switch (detected_host_os()) {
+        case OS_MACOS:
+        case OS_IOS:
+            default_layer_set(1 << _MAC);
+            my_activate_led();
+            ret = 0;
+            break;
+        case OS_WINDOWS:
+            default_layer_set(1 << _WIN);
+            my_deactivate_led();
+            ret = 0;
+            break;
+        case OS_UNSURE:
+        default:
+            break;
     }
-
-    return retry_ms;
+    return ret;
 }
 
 void keyboard_post_init_user(void) {
@@ -115,25 +138,5 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
     }
-
     return true;
-}
-
-void my_deactivate_led(void) {
-    if (my_led_on()) {
-        writePinLow(LED_PIN);
-    }
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state | default_layer_state)) {
-    case _MAC:
-    case _MACSYM:
-        my_activate_led();
-        break;
-    default:
-        my_deactivate_led();
-        break;
-    }
-  return state;
 }
