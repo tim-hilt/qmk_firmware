@@ -8,7 +8,7 @@
 #define LED_PIN D5
 
 // Uncomment to make left half master
-// #define SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
+#define SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
 
 #define RP2040_FLASH_GD25Q64C
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
