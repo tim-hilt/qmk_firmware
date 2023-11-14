@@ -1,7 +1,4 @@
 #include QMK_KEYBOARD_H
-#include "os_detection.h"
-#include "usb_device_state.h"
-#include "wait.h"
 
 enum layers {
     _WIN = 0,
@@ -79,31 +76,26 @@ void my_deactivate_led(void) {
     }
 }
 
-uint32_t my_set_default_layer(uint32_t trigger_time, void *cb_arg) {
-    uint32_t ret = 500;
+bool process_detected_host_os_kb(os_variant_t detected_os) {
+    if (!process_detected_host_os_user(detected_os)) {
+        return false;
+    }
 
-    switch (detected_host_os()) {
+    switch (detected_os) {
         case OS_MACOS:
         case OS_IOS:
             default_layer_set(1 << _MAC);
             my_activate_led();
-            ret = 0;
             break;
+        case OS_LINUX:
+        case OS_UNSURE:
         case OS_WINDOWS:
             default_layer_set(1 << _WIN);
             my_deactivate_led();
-            ret = 0;
-            break;
-        case OS_UNSURE:
-        default:
             break;
     }
-
-    return ret;
-}
-
-void keyboard_post_init_user(void) {
-    defer_exec(100, my_set_default_layer, NULL);
+    
+    return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
