@@ -1,10 +1,14 @@
 #include QMK_KEYBOARD_H
+#include "os_detection.h"
+#include "print.h"
 
 enum layers {
     _WIN = 0,
-    _MAC,
     _WINSYM,
+    _MAC,
     _MACSYM,
+    _LINUX,
+    _LINUXSYM,
     _INT,
     _TEMPLATE,
 };
@@ -42,6 +46,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,                                               KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
                                                   KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO
     ),
+    [_LINUX] = LAYOUT_split_3x6_3(
+     KC_TAB,          KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                                                                    KC_J,     KC_L,      KC_U,    KC_Y,    KC_SCLN, KC_MINS,
+     LCTL_T(KC_ESC),  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                                                                    KC_M,     KC_N,      KC_E,    KC_I,    KC_O,    KC_QUOT,
+     KC_LSFT,         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                                                                    KC_K,     KC_H,      KC_COMM, KC_DOT,  KC_SLSH, KC_END,
+                                                          KC_LALT, KC_SPC, KC_LGUI,        LT(_LINUXSYM, KC_ENT),  LSFT_T(KC_BSPC),  KC_RALT
+    ),
+    [_LINUXSYM] = LAYOUT_split_3x6_3(
+     KC_GRV,  KC_EXLM, KC_AMPR, KC_LCBR, KC_RCBR, KC_CIRC,                                             KC_PSCR,   KC_7,   KC_8, KC_9, KC_COLN, KC_DEL,
+     KC_HASH, KC_EQL,  KC_DLR,  KC_LPRN, KC_RPRN, KC_TILD,                                             G(KC_UP),        KC_4,   KC_5, KC_6, KC_PLUS, KC_ASTR,
+     KC_PIPE, KC_AT,   KC_PERC, KC_LBRC, KC_RBRC, KC_UP,                                               KC_0,         KC_1,   KC_2, KC_3, KC_BSLS, KC_HOME,
+                                                  KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    G(KC_LEFT), G(KC_RGHT)
+    ),
     [_INT] = LAYOUT_split_3x6_3(
      KC_NO,    KC_NO,      KC_NO, KC_NO,      KC_NO, KC_NO,                                            KC_NO,   KC_NO,   RALT(KC_Y), KC_NO, KC_NO,      KC_NO,
      KC_NO,    RALT(KC_Q), KC_NO, RALT(KC_S), KC_NO, KC_NO,                                            KC_NO,   KC_NO,   RALT(KC_5), KC_NO, RALT(KC_P), KC_NO,
@@ -57,20 +73,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_detected_host_os_kb(os_variant_t detected_os) {
+    uprinf("Reached process_detected_hos_os_kb\n");
     if (!process_detected_host_os_user(detected_os)) {
+        uprintf("Went into that if-statement\n");
         return false;
     }
 
     switch (detected_os) {
         case OS_MACOS:
         case OS_IOS:
-        case OS_UNSURE:
+            uprintf("Apple\n");
             default_layer_set(1 << _MAC);
             break;
-        case OS_LINUX:
         case OS_WINDOWS:
-            // TODO: If Windows is also not detected reliably comment on GitHub issue once again
+            uprintf("Windows\n");
             default_layer_set(1 << _WIN);
+            break;
+        case OS_LINUX:
+            uprintf("Linux\n");
+            default_layer_set(1 << _LINUX);
+            break;
+        case OS_UNSURE:
+            uprintf("Unsure\n");
             break;
     }
 
