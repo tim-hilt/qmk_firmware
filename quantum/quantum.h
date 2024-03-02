@@ -232,10 +232,6 @@ void set_single_persistent_default_layer(uint8_t default_layer);
 #define IS_LAYER_ON(layer) layer_state_is(layer)
 #define IS_LAYER_OFF(layer) !layer_state_is(layer)
 
-#ifdef OS_DETECTION_ENABLE
-#    include "os_detection.h"
-#endif
-
 #define IS_LAYER_ON_STATE(state, layer) layer_state_cmp(state, layer)
 #define IS_LAYER_OFF_STATE(state, layer) !layer_state_cmp(state, layer)
 
