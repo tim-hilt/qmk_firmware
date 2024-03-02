@@ -43,10 +43,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                   KC_LEFT, KC_DOWN,   KC_RGHT,      KC_NO,    KC_NO,   KC_NO
     ),
     [_INT] = LAYOUT_split_3x6_3(
-     KC_NO, KC_NO,      KC_NO, KC_NO,      KC_NO, KC_NO,                                            KC_NO,   KC_NO,   RALT(KC_Y), KC_NO, KC_NO,      KC_NO,
-     KC_NO, RALT(KC_Q), KC_NO, RALT(KC_S), KC_NO, KC_NO,                                            KC_NO,   KC_NO,   RALT(KC_5), KC_NO, RALT(KC_P), KC_NO,
-     KC_NO, KC_NO,      KC_NO, KC_NO,      KC_NO, KC_NO,                                            KC_NO,   KC_NO,   KC_F2,      KC_NO, KC_NO,      KC_NO,
-                                                  KC_NO, KC_NO, KC_NO,             KC_NO , KC_LSFT, KC_NO
+     KC_NO,    KC_NO,      KC_NO, KC_NO,      KC_NO, KC_NO,                                            KC_NO,   KC_NO,   RALT(KC_Y), KC_NO, KC_NO,      KC_NO,
+     KC_NO,    RALT(KC_Q), KC_NO, RALT(KC_S), KC_NO, KC_NO,                                            KC_NO,   KC_NO,   RALT(KC_5), KC_NO, RALT(KC_P), KC_NO,
+     KC_LSFT,  KC_NO,      KC_NO, KC_NO,      KC_NO, KC_NO,                                            KC_NO,   KC_NO,   KC_F2,      KC_NO, KC_NO,      KC_NO,
+                                                     KC_NO, KC_NO, KC_NO,             KC_NO , KC_LSFT, KC_NO
     ),
     [_TEMPLATE] = LAYOUT_split_3x6_3(
      KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,                                         KC_NO,   KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,
@@ -64,15 +64,16 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
     switch (detected_os) {
         case OS_MACOS:
         case OS_IOS:
+        case OS_UNSURE:
             default_layer_set(1 << _MAC);
             break;
         case OS_LINUX:
-        case OS_UNSURE:
         case OS_WINDOWS:
+            // TODO: If Windows is also not detected reliably comment on GitHub issue once again
             default_layer_set(1 << _WIN);
             break;
     }
-    
+
     return true;
 }
 
