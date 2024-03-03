@@ -1,6 +1,4 @@
 #include QMK_KEYBOARD_H
-#include "os_detection.h"
-#include "print.h"
 
 enum layers {
     _WIN = 0,
@@ -73,28 +71,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_detected_host_os_kb(os_variant_t detected_os) {
-    uprinf("Reached process_detected_hos_os_kb\n");
     if (!process_detected_host_os_user(detected_os)) {
-        uprintf("Went into that if-statement\n");
         return false;
     }
 
     switch (detected_os) {
         case OS_MACOS:
         case OS_IOS:
-            uprintf("Apple\n");
             default_layer_set(1 << _MAC);
             break;
         case OS_WINDOWS:
-            uprintf("Windows\n");
             default_layer_set(1 << _WIN);
             break;
         case OS_LINUX:
-            uprintf("Linux\n");
             default_layer_set(1 << _LINUX);
             break;
         case OS_UNSURE:
-            uprintf("Unsure\n");
             break;
     }
 
