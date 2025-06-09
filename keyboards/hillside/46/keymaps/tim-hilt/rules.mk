@@ -1,0 +1,2 @@
+CONVERT_TO = promicro_rp2040
+OS_DETECTION_ENABLE = yes
